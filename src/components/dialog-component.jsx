@@ -23,7 +23,7 @@ export default  function DialogComponent() {
 
   return (
     <>
-      <div>
+      <div className="mt-10">
         <Dialog>
           <DialogTrigger asChild>
             <Button variant="outline">

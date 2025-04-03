@@ -1,7 +1,5 @@
 "use client";
 
-import CardComponent from "./card";
-
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,56 +11,22 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { SquarePlus, Star } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"; 
+import { SquarePlus } from "lucide-react";
 import { useActionState } from "react";
 import { taskAction } from "@/actions/task-action";
 
-export default function TodoComponent({ taskList }) {
+export default function AddTaskComponent() {
   const [state, formAction, isPending] = useActionState(taskAction, null);
-  console.log("Fetched Tasks:", taskList);
-
-  // Organize tasks by status
-  const tasksByStatus = {
-    NOT_STARTED: [],
-    IN_PROGRESS: [],
-    FINISHED: [],
-  };
-
-  taskList.payload.forEach((task) => {
-    if (tasksByStatus[task.status]) {
-      tasksByStatus[task.status].push(task);
-    }
-  });
 
   return (
     <div className="min-h-screen">
-      <div>
-        <div className=" flex flex-row justify-between mx-10 bg-amber-200 items-center p-6 rounded-2xl">
-          <p className="text-3xl font-medium">
-            {/* {workspace?.payload?.workspaceName || "No workspace available"} */}
-            HRD
-          </p>
-          <span>
-            <Star />
-          </span>
-        </div>
-        <main className="flex-grow space-y-7 p-6">
-          <div className="grid grid-cols-3 gap-4 text-center text-2xl">
-            {Object.entries(tasksByStatus).map(([status, tasks]) => (
-              <div key={status} className="text-center">
-                <h2 className="font-bold">{status.replace("_", " ")}</h2>
-                {tasks.length > 0 ? (
-                  tasks.map((task) => (
-                    <CardComponent key={task.taskId} task={task} />
-                  ))
-                ) : (
-                  <p className="text-gray-500">No tasks</p>
-                )}
-              </div>
-            ))}
-          </div>
-        </main>
-      </div>
       <div className="fixed bottom-6 right-6 z-50">
         <Dialog>
           <DialogTrigger asChild>
@@ -79,12 +43,13 @@ export default function TodoComponent({ taskList }) {
 
             <form action={formAction}>
               <div className="grid gap-4 py-4">
+                {/* Task Title */}
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="name" className="text-right">
+                  <Label htmlFor="taskTitle" className="text-right">
                     Task Title
                   </Label>
                   <Input
-                    id="name"
+                    id="taskTitle"
                     name="taskTitle"
                     className="col-span-3"
                     placeholder="Enter task name"
@@ -92,41 +57,55 @@ export default function TodoComponent({ taskList }) {
                   />
                 </div>
 
+                {/* Task Details */}
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="name" className="text-right">
+                  <Label htmlFor="taskDetails" className="text-right">
                     Task Details
                   </Label>
                   <Input
-                    id="name"
+                    id="taskDetails"
                     name="taskDetails"
                     className="col-span-3"
-                    placeholder="Enter task name"
+                    placeholder="Enter task details"
                     required
                   />
                 </div>
 
+                {/* Tag Dropdown */}
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="name" className="text-right">
+                  <Label htmlFor="tag" className="text-right">
                     Tag
                   </Label>
-                  <Input
-                    id="name"
-                    name="tag"
-                    className="col-span-3"
-                    placeholder="Enter task name"
-                    required
-                  />
+                  <Select id="tag" name="tag" className="col-span-3" required>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select tag" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="DESIGN">Design</SelectItem>
+                      <SelectItem value="HOMEWORK">Homework</SelectItem>
+                      <SelectItem value="ASSIGNMENT">Assignment</SelectItem>
+                      <SelectItem value="DEPLOYMENT">Deployment</SelectItem>
+                      <SelectItem value="GIT">Git</SelectItem>
+                      <SelectItem value="DATABASE">Database</SelectItem>
+                      <SelectItem value="MINI_PROJECT">Mini Project</SelectItem>
+                      <SelectItem value="DOCUMENTATION">
+                        Documentation
+                      </SelectItem>
+                      <SelectItem value="FEATURE">Feature</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
+                {/* End Date */}
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="name" className="text-right">
+                  <Label htmlFor="endDate" className="text-right">
                     End date
                   </Label>
                   <Input
-                    id="name"
+                    id="endDate"
                     name="endDate"
+                    type="datetime-local"
                     className="col-span-3"
-                    placeholder="Enter task name"
                     required
                   />
                 </div>

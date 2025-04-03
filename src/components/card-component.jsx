@@ -8,8 +8,9 @@ import {
 } from "@/components/ui/select";
 import { Clock, Ellipsis } from "lucide-react";
 import React from "react";
+import { EllipsisDelete } from "./cardEllipsis-component";
 
-export default function CardComponent({ task }) {
+export default function CardComponent({ task, workspaceId }) {
   // Dynamically set status color
   const statusColors = {
     NOT_STARTED: "bg-[#F96666]",
@@ -17,12 +18,23 @@ export default function CardComponent({ task }) {
     FINISHED: "bg-[#009990]",
   };
 
+  
+  const formattedDate = new Date(task.startDate).toLocaleDateString("en-US", {
+    
+    year: "numeric",
+    month: "long", 
+    day: "numeric",
+  });
+
+  console.log("In Card component task: ", task?.taskId);
+  console.log("In Card component workspaceID: ", workspaceId);
+
   return (
     <div className="border border-gray-300 rounded-xl mt-8">
       <div className="p-5">
         <div className="flex justify-between">
           <h2 className="text-xl font-bold capitalize">{task.taskTitle}</h2>
-          <Ellipsis />
+          <EllipsisDelete task={task?.taskId} workspaceId={workspaceId} />
         </div>
 
         {/* task detials */}
@@ -62,7 +74,7 @@ export default function CardComponent({ task }) {
 
         {/* date */}
         <p className="flex gap-3 text-light-steel-blue">
-          <Clock size={22} /> {task.startDate}
+          <Clock size={22} /> {formattedDate}
         </p>
       </div>
     </div>
