@@ -37,21 +37,17 @@ export default async function TodoDetail({ params }) {
                 "No workspace available"}
               HRD
             </p>
-            
+
             <span>
               <Star />
             </span>
-          {/* <WorkspaceHeader
-            workspaceId={workspaceId}
-            workspaceName={workspaceName}
-            isFavorite={isFavorite.isFavorite}
-          /> */}
         </div>
         <main className="flex-grow space-y-7 p-6  ">
           <div className="grid grid-cols-3 gap-4 text-center text-2xl h-[700px] overflow-y-auto shadow-[10px]">
+            
             {Object.entries(tasksByStatus).map(([status, tasks]) => (
               <div key={status} className="text-center ">
-                <h2 className="font-bold">{status.replace("_", " ")}</h2>
+                <h2 className="font-bold border underline">{status.replace("_", " ")}</h2>
                 {tasks.length > 0 ? (
                   tasks.map((task) => (
                     <CardComponent
