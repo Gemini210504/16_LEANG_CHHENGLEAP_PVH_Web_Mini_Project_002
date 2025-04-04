@@ -1,47 +1,34 @@
-"use server";
-
-import { auth } from "@/auth"; // Assuming auth is a function that handles user authentication
-import { fetchWorkspace } from "@/service/dashboard-service"; // Assuming fetchWorkspace is for fetching workspace info
+import { auth } from "@/auth";
 
 export const deleteAction = async (_, { taskId, workspaceId }) => {
-  try {
-    // Step 1: Authenticate the user and fetch necessary details
-    const session = await auth();
-    const workspaceData = await fetchWorkspace();
+  console.log("TaskId in delete: ", taskId)
+  console.log("Workspace in delete: ", workspaceId);
+ 
+  if (!taskId || !workspaceId) {
+    return { error: "Missing taskId or workspaceId" };
+  }
 
-    const workspace = workspaceData?.payload?.find(
-      (ws) => ws.workspaceId === workspaceId
-    );
+  const session = await auth();
+  console.log("Session in delete: ", session);
+  if (!session?.token) {
+    return { error: "User not authenticated" };
+  }
 
-    if (!workspace) {
-      throw new Error("Workspace not found");
+  const response = await fetch(
+    `http://96.9.81.187:8080/api/v1/task/${taskId}/workspace/${workspaceId}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.token}`,
+      },
     }
+  );
 
-    if (!session?.token) {
-      throw new Error("User not authenticated");
-    }
-
-    const res = await fetch(
-      `http://96.9.81.187:8080/api/v1/task/${taskId}/workspace/${workspaceId}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.token}`,
-        },
-      }
-    );
-
-    // Step 3: Handle response
-    if (!res.ok) {
-      const errorResponse = await res.json();
-      throw new Error(errorResponse?.message || "Failed to delete task");
-    }
-
-    // Return success response if task is deleted
-    return { success: true, message: "Task deleted successfully" };
-  } catch (error) {
-    console.error("Error deleting task:", error.message);
-    return { error: error.message };
+  if (response.ok) {
+    return { success: "Task deleted successfully" };
+  } else {
+    const errorResponse = await response.json();
+    return { error: errorResponse?.message || "Failed to delete task" };
   }
 };

@@ -1,38 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useState, startTransition } from "react";
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"; // Assuming Dialog components are set up correctly
-import { Button } from "@/components/ui/button"; // Assuming Button component is correctly set up
-import { Ellipsis } from "lucide-react"; // Import Ellipsis icon
-import { useActionState } from "react"; // Assuming useActionState is imported from your custom hook package
-import { deleteAction } from "@/actions/taskdelete-action"; // Assuming deleteAction is your deletion function
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Ellipsis } from "lucide-react";
+import { useActionState } from "react";
+import { deleteAction } from "@/actions/taskdelete-action";
 
-export function EllipsisDelete({ task, workspaceId }) {
+export function EllipsisDelete({ taskId, workspaceId }) {
+  // console.log("Received taskId11:", taskId, "Received workspaceId111:", workspaceId);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [state, formAction, isPending] = useActionState(deleteAction); // Using useActionState to track action state
+  const [state, formAction, isPending] = useActionState(deleteAction,null);
 
-  const handleDelete = async () => {
-    // Call delete action with task and workspaceId
-    await formAction({ taskId: task, workspaceId });
+  const handleDelete = () => {
+    startTransition(() => {
+      formAction( taskId, workspaceId );
+    });
   };
 
   return (
     <>
-      {/* Ellipsis icon that triggers the dialog */}
       <span
         className="text-xl cursor-pointer"
-        onClick={() => setIsDialogOpen(true)} // Open the dialog when clicked
+        onClick={() => setIsDialogOpen(true)}
       >
         <Ellipsis />
       </span>
 
-      {/* Confirmation Dialog */}
       <Dialog
         open={isDialogOpen}
         onOpenChange={(open) => setIsDialogOpen(open)}
@@ -48,19 +48,18 @@ export function EllipsisDelete({ task, workspaceId }) {
 
           <DialogFooter>
             <Button
-              onClick={() => setIsDialogOpen(false)} // Close the dialog without deletion
+              onClick={() => setIsDialogOpen(false)}
               className="mr-2"
-              disabled={isPending} // Disable cancel button if deletion is in progress
+              disabled={isPending}
             >
               Cancel
             </Button>
             <Button
-              onClick={handleDelete} // Trigger the delete action on button click
+              onClick={handleDelete}
               className="bg-red-500 text-white"
-              disabled={isPending} // Disable delete button if deletion is in progress
+              disabled={isPending}
             >
-              {isPending ? "Deleting..." : "Delete"}{" "}
-              {/* Show loading text when pending */}
+              {isPending ? "Deleting..." : "Delete"}
             </Button>
           </DialogFooter>
         </DialogContent>

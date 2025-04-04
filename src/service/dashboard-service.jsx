@@ -70,11 +70,11 @@ export async function fetchTask(workspaceId) {
 
 
 
-export async function postTask(taskTitle, taskDetails, tag, status, endDate) {
+export async function postTask(taskTitle, taskDetails, tag, endDate) {
   const session = await auth();
   const workspaceData = await fetchWorkspace();
   const workspaceId = workspaceData?.payload?.[0]?.workspaceId;
-
+  console.log("taskkkkk",taskTitle);
   console.log("Workspace ID in post: ", workspaceId);
   console.log("Session token: ", session?.token);
 
@@ -88,13 +88,11 @@ export async function postTask(taskTitle, taskDetails, tag, status, endDate) {
     return { error: "User not authenticated" };
   }
 
-  // Check if endDate is a valid date string
   if (!endDate || isNaN(new Date(endDate).getTime())) {
     console.error("Invalid date:", endDate);
     return { error: "Invalid end date" };
   }
-
-  // Format the endDate to ISO format
+  
   const formattedEndDate = new Date(endDate).toISOString();
   console.log("Formatted EndDate:", formattedEndDate);
 
@@ -111,21 +109,12 @@ export async function postTask(taskTitle, taskDetails, tag, status, endDate) {
           taskTitle,
           taskDetails,
           tag,
-          status,
           endDate: formattedEndDate,
         }),
       }
     );
 
-    if (!res.ok) {
-      const errorResponse = await res.json(); // Get the error message from the response
-      throw new Error(
-        `Failed to create task: ${res.status} - ${
-          errorResponse.message || "Unknown error"
-        }`
-      );
-    }
-
+  
     const responseData = await res.json();
     console.log("Task created successfully:", responseData);
 

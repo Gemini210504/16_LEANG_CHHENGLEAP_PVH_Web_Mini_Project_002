@@ -31,12 +31,13 @@ export default async function TodoDetail({ params }) {
   return (
     <>
       <div className="min-h-screen">
-        <div className=" flex flex-row justify-between mx-10 bg-amber-200 items-center p-6 rounded-2xl">
+        <div className=" flex flex-row justify-between mx-10 items-center p-6 rounded-2xl shadow-2xsr">
           <p className="text-3xl font-medium">
               {workspaceName?.payload?.workspaceName ||
                 "No workspace available"}
               HRD
             </p>
+            
             <span>
               <Star />
             </span>

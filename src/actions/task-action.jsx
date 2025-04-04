@@ -4,7 +4,7 @@ import { auth } from "@/auth";
 import {  postTask } from "@/service/dashboard-service";
 
 export const taskAction = async (_, formData) => {
-  
+    console.log("taskAction",formData)
     const session = await auth();
     const taskTitle = formData.get("taskTitle");
     const taskDetails = formData.get("taskDetails");

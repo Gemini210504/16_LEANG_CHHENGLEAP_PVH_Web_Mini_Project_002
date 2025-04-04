@@ -26,15 +26,17 @@ export default function CardComponent({ task, workspaceId }) {
     day: "numeric",
   });
 
-  console.log("In Card component task: ", task?.taskId);
-  console.log("In Card component workspaceID: ", workspaceId);
+  // console.log("In Card component task: ", task?.taskId);
+  const taskId = task?.taskId;
+  // console.log("In Card component taskId: ", taskId);
+  // console.log("In Card component workspaceID: ", workspaceId);
 
   return (
     <div className="border border-gray-300 rounded-xl mt-8">
       <div className="p-5">
         <div className="flex justify-between">
           <h2 className="text-xl font-bold capitalize">{task.taskTitle}</h2>
-          <EllipsisDelete task={task?.taskId} workspaceId={workspaceId} />
+          <EllipsisDelete taskId={taskId} workspaceId={workspaceId} />
         </div>
 
         {/* task detials */}
